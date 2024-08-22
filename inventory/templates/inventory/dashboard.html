@@ -1,0 +1,81 @@
+{% extends "inventory/base.html" %}
+{% block content %}
+{% if messages %}
+
+<div class="row mt-3">
+    {% for message in messages %}
+    {% if message.tags == 'error' %}
+
+    <div class="col-md-10 col-12 mx-auto alert alert-danger"> {{ message }}</div>
+    {% else %}
+    <div class="col-md-10 col-12 mx-auto alert alert-success"> {{ message }}</div>
+    {% endif %}
+
+    {% endfor %}
+</div>
+{% endif %}
+<div class="row">
+    <div class="col-md-10 col-12 mx-auto mt-5">
+        <div class="d-flex justify-content-end">
+            <a href="{% url "add-item" %}" class="btn btn-primary">+</a>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Device Name</th>
+                    <th scope="col">Device Type</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Audit</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Borrow Date</th>
+                    <th scope="col">Return Date</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if items|length == 0 %}
+                <tr>
+                    <th scope="row">-</th>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {% endif %}
+
+                {% for item in items %}
+                
+                <tr>
+                    <th scope="row">{{ item.id }}</th> 
+                    <td scope="row">{{ item.name }}</td>
+                    <td scope="row">{{ item.type.name }}</td>
+                    {% if item.id in low_inventory_ids %}
+                    <td class="text-danger">{{ item.quantity }}</td>
+                    {% else %}
+                    <td class="text-success">{{ item.quantity }}</td>
+                    {% endif %}
+                    <td scope="row">{{ item.audit }}</td> 
+                    <td scope="row">{{ item.location }}</td> 
+                    <td scope="row">{{ item.status }}</td>
+                    <td scope="row">{{ item.borrow_date }}</td>
+                    <td scope="row">{{ item.return_date }}</td>
+                    <td scope="row"><a href="{% url "edit-item" item.id %}" class="btn btn-outline-secondary">Edit</a></td>
+                    <td scope="row"><a href="{% url "delete-item" item.id %}" class="btn btn-secondary">Delete</a></td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}
